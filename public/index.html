@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found | Community Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Lost & Found</h1>
+        <p>Connecting owners with their lost belongings.</p>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            <!-- Sidebar: Report Forms -->
+            <div class="sidebar">
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <h2>Report Something</h2>
+                    <form id="itemForm">
+                        <div class="form-group">
+                            <label for="itemname">Item Name</label>
+                            <input type="text" id="itemname" required placeholder="e.g. Blue Wallet">
+                        </div>
+                        <div class="form-group">
+                            <label for="type">Report Type</label>
+                            <select id="type">
+                                <option value="lost">I Lost This</option>
+                                <option value="found">I Found This</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" required placeholder="your@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="lostaddress">Location</label>
+                            <input type="text" id="lostaddress" required placeholder="e.g. Central Park">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" rows="3" required placeholder="Details about the item..."></textarea>
+                        </div>
+                        <button type="submit" id="submitBtn">Post Report</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Main: Dashboard -->
+            <div class="main">
+                <div class="card">
+                    <div class="dashboard-header">
+                        <h2>Recent Items</h2>
+                        <div class="filter-btns">
+                            <button class="filter-btn active" onclick="filterItems('all')">All</button>
+                            <button class="filter-btn" onclick="filterItems('lost')">Lost</button>
+                            <button class="filter-btn" onclick="filterItems('found')">Found</button>
+                        </div>
+                    </div>
+                    <div id="itemList" class="item-list">
+                        <!-- Items will be loaded here -->
+                        <p style="text-align: center; color: var(--text-muted);">Loading items...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

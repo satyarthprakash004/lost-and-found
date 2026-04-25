@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const Item = require('../models/item');
+const { sendMatchEmail } = require('../utils/mailer');
 
 router.post('/', async (req, res) => {
   try {
-    console.log(req.body); // dekho kya aa raha hai
-
     const { itemname, type, email, lostaddress, description } = req.body;
 
     if (!itemname || !type || !email) {
-      return res.status(400).json({ error: 'itemname, type aur email required hai' });
+      return res.status(400).json({ error: 'itemname, type and email are required' });
     }
 
     const item = await Item.create({
@@ -20,7 +19,24 @@ router.post('/', async (req, res) => {
       description
     });
 
-    res.status(201).json({ message: 'Item posted!', item });
+    // Simple matching logic
+    const matchType = type === 'lost' ? 'found' : 'lost';
+    const potentialMatch = await Item.findOne({
+      itemname: { $regex: new RegExp(`^${itemname}$`, 'i') },
+      type: matchType,
+      status: 'open'
+    });
+
+    if (potentialMatch) {
+      console.log(`Match found for ${itemname}!`);
+      const ownerEmail = type === 'lost' ? email : potentialMatch.email;
+      const founderEmail = type === 'found' ? email : potentialMatch.email;
+      
+      // Send email (async, don't wait for it to block response)
+      sendMatchEmail(ownerEmail, founderEmail, itemname);
+    }
+
+    res.status(201).json({ message: 'Item posted!', item, matchFound: !!potentialMatch });
 
   } catch (err) {
     res.status(500).json({ error: err.message });

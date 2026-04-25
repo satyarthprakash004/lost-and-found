@@ -17,6 +17,7 @@ if (process.env.MONGO_URI) {
 }
 
 app.use(express.json());
+app.use(express.static('public'));
 
 // Routes
 app.use('/items', require('./routes/items'));

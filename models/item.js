@@ -8,6 +8,11 @@ const itemSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: ['lost', 'found'],
+    default: 'lost'
+  },
+  status: {
+    type: String,
+    enum: ['open', 'claimed'],
     default: 'open'
   },
   email: {
