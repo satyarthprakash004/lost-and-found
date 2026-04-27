@@ -1,81 +1,81 @@
 # Lost & Found Portal 🕵️‍♂️
 
-A modern, full-stack web application designed to help communities connect lost items with their rightful owners.
+A modern, full-stack community portal designed to bridge the gap between lost belongings and their rightful owners. Now enhanced with category-specific tracking and official authority integration.
 
-## 🚀 Features
+## 🚀 Key Features
 
-- **Premium Frontend**: A sleek, dark-themed dashboard with glassmorphism effects.
-- **Smart Matching Logic**: Automatically detects matches between lost and found reports.
-- **Email Notifications**: Instant email alerts sent to owners when a match is found.
-- **Responsive Dashboard**: Real-time list of all reported items with status tracking.
-- **Filterable Items**: Quickly sort through 'Lost' and 'Found' categories.
+- **Smart Categorization**: Specialized fields for different item types:
+  - **Electronics**: Track by IMEI or Serial Number.
+  - **Documents**: Track by ID Type (Aadhar, PAN) and Document Number.
+  - **Vehicles**: Track by Registration Plate Number.
+  - **Pets**: Track by Species, Breed, and Microchip ID.
+- **Police Mode**: Dedicated "Official Report" toggle for law enforcement and authority recovery centers.
+- **Real-time Category Search**: Filter and search items instantly by name, ID, or description across categories.
+- **Guest Reporting**: Report lost/found items without an account—just provide your email for matching alerts.
+- **Automated Matching**: Instant email notifications when a lost item's unique identifier (like an IMEI or Plate) matches a found report.
+- **Premium UI**: Sleek, glassmorphism-inspired dashboard with interactive animations.
 
 ## 🛠 Tech Stack
 
 - **Backend**: Node.js, Express.js
-- **Database**: MongoDB (via Mongoose)
+- **Database**: MongoDB (Mongoose ODM)
+- **Security**: JWT Authentication, Cookie-based sessions, Bcrypt password hashing.
 - **Email Service**: Nodemailer (Gmail SMTP)
-- **Frontend**: HTML5, Vanilla CSS3, JavaScript (ES6+)
+- **Frontend**: HTML5, Vanilla CSS3 (Custom Design System), JavaScript (ES6+)
 
 ## 📋 Setup Instructions
 
-### 1. Prerequisites
-- Node.js installed on your machine.
-- A MongoDB database (local or Atlas).
-
-### 2. Installation
-Clone the repository and install dependencies:
+### 1. Installation
 ```bash
 npm install
 ```
 
-### 3. Environment Configuration
-Create a `.env` file in the root directory and add the following:
+### 2. Environment Configuration
+Create a `.env` file in the root directory:
 ```env
 MONGO_URI=your_mongodb_connection_string
-EMAIL_USER=your-gmail@gmail.com
-EMAIL_PASS=your-16-character-app-password
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
 PORT=5000
 ```
 
-### 4. Gmail App Password Setup (CRITICAL)
-Regular Gmail passwords will not work. You must:
-1. Enable **2-Step Verification** on your Google Account.
-2. Go to [App Passwords](https://myaccount.google.com/apppasswords).
-3. Create an app named "LostAndFound".
-4. Copy the **16-character code** (no spaces) into `EMAIL_PASS` in your `.env`.
-
-## 🏃‍♂️ Running the App
-
-Start the development server:
+### 3. Running the App
 ```bash
+# Development mode
 npm run dev
+
+# Production mode
+npm start
 ```
-Open your browser to: `http://localhost:5000`
+Access the portal at: `http://localhost:5000`
+
+## 📜 API Highlights
+
+- `POST /items`: Create a report (Authenticated or Guest).
+- `GET /items`: Retrieve all reports with category filtering support.
+- `PATCH /items/:id/claim`: Mark an item as successfully returned.
+- `POST /auth/register`: Create a new user account.
+- `POST /auth/login`: Secure login with HTTP-only cookie tokens.
 
 ## 📂 Project Structure
 
 ```text
 ├── models/
-│   └── item.js        # Mongoose schema for items
+│   ├── item.js        # Enhanced schema with category fields
+│   └── user.js        # User profile schema
 ├── public/
-│   ├── index.html     # Main frontend structure
-│   ├── style.css      # Premium styling
-│   └── script.js      # Frontend logic & API calls
+│   ├── index.html     # Main dynamic dashboard
+│   ├── style.css      # Custom UI components & animations
+│   └── script.js      # Frontend logic & category filtering
 ├── routes/
-│   └── items.js       # API endpoints for item management
+│   ├── items.js       # Matching & item management logic
+│   └── auth.js        # Security & session endpoints
 ├── utils/
-│   └── mailer.js      # Email notification logic
-├── .env               # Private configuration
-├── server.js          # Main entry point
-└── package.json       # Project dependencies
+│   ├── mailer.js      # Notification engine
+│   └── auth.js        # Authentication middleware
+├── server.js          # Entry point
+└── README.md          # Project documentation
 ```
 
-## 📜 API Endpoints
-
-- `GET /items`: Fetch all lost and found items.
-- `POST /items`: Report a new item (triggers matching logic).
-- `PATCH /items/:id/claim`: Mark an item as claimed.
-
 ---
-Built with ❤️ for a better community.
+Built with ❤️ to help communities stay connected.
