@@ -35,7 +35,7 @@ Create a `.env` file in the root directory and add the following:
 MONGO_URI=your_mongodb_connection_string
 EMAIL_USER=your-gmail@gmail.com
 EMAIL_PASS=your-16-character-app-password
-PORT=3000
+PORT=5000
 ```
 
 ### 4. Gmail App Password Setup (CRITICAL)
@@ -51,7 +51,7 @@ Start the development server:
 ```bash
 npm run dev
 ```
-Open your browser to: `http://localhost:3000`
+Open your browser to: `http://localhost:5000`
 
 ## 📂 Project Structure
 

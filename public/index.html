@@ -5,65 +5,181 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lost & Found | Community Portal</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Lost & Found</h1>
-        <p>Connecting owners with their lost belongings.</p>
-    </header>
-
     <div class="container">
-        <div class="grid">
-            <!-- Sidebar: Report Forms -->
-            <div class="sidebar">
-                <div class="card" style="margin-bottom: 1.5rem;">
-                    <h2>Report Something</h2>
-                    <form id="itemForm">
-                        <div class="form-group">
-                            <label for="itemname">Item Name</label>
-                            <input type="text" id="itemname" required placeholder="e.g. Blue Wallet">
-                        </div>
-                        <div class="form-group">
-                            <label for="type">Report Type</label>
-                            <select id="type">
-                                <option value="lost">I Lost This</option>
-                                <option value="found">I Found This</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Your Email</label>
-                            <input type="email" id="email" required placeholder="your@email.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="lostaddress">Location</label>
-                            <input type="text" id="lostaddress" required placeholder="e.g. Central Park">
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea id="description" rows="3" required placeholder="Details about the item..."></textarea>
-                        </div>
-                        <button type="submit" id="submitBtn">Post Report</button>
-                    </form>
-                </div>
+        <header>
+            <div class="logo">
+                <span class="icon">🔍</span> Lost&Found
             </div>
+            <nav class="nav-links">
+                <a href="#fir-section">FIR Helper</a>
+                <a href="#mobile-lock">Mobile Lock</a>
+                <a href="#items-list">Browse Items</a>
+                <div id="user-nav">
+                    <button class="btn btn-primary" onclick="openAuthModal('login')">Login</button>
+                </div>
+            </nav>
+        </header>
 
-            <!-- Main: Dashboard -->
-            <div class="main">
-                <div class="card">
-                    <div class="dashboard-header">
-                        <h2>Recent Items</h2>
-                        <div class="filter-btns">
-                            <button class="filter-btn active" onclick="filterItems('all')">All</button>
-                            <button class="filter-btn" onclick="filterItems('lost')">Lost</button>
-                            <button class="filter-btn" onclick="filterItems('found')">Found</button>
-                        </div>
-                    </div>
-                    <div id="itemList" class="item-list">
-                        <!-- Items will be loaded here -->
-                        <p style="text-align: center; color: var(--text-muted);">Loading items...</p>
-                    </div>
+        <section class="hero animate">
+            <h1>Solve the Problem of Lost Belongings</h1>
+            <p>A community-driven portal to help people find their lost items and handle legal procedures easily.</p>
+            <div style="margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="checkAuthAndOpenPost()">Report Lost/Found Item</button>
+            </div>
+        </section>
+
+        <!-- Items Display -->
+        <section id="items-list" class="items-section animate">
+            <div class="dashboard-header">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search by name, IMEI, plate, or description..." oninput="handleSearch()">
+                </div>
+                <div class="filter-bar">
+                    <button class="filter-btn active" onclick="filterItems('all')">All</button>
+                    <button class="filter-btn" onclick="filterItems('electronics')">Electronics</button>
+                    <button class="filter-btn" onclick="filterItems('document')">Documents</button>
+                    <button class="filter-btn" onclick="filterItems('vehicle')">Vehicles</button>
+                    <button class="filter-btn" onclick="filterItems('pet')">Pets</button>
                 </div>
             </div>
+            <div id="items-grid" class="items-grid">
+                <!-- Items will be loaded here via JavaScript -->
+                <p>Loading items...</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Welcome Back</h2>
+            <p id="modal-desc" style="color: var(--text-muted); margin-bottom: 2rem;">Login to your account to continue.</p>
+            
+            <form id="auth-form">
+                <div class="form-group" id="name-group" style="display: none;">
+                    <label>Full Name</label>
+                    <input type="text" id="auth-name" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="auth-email" placeholder="example@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">Continue</button>
+            </form>
+            
+            <p class="auth-toggle" id="auth-toggle-text">
+                Don't have an account? <span onclick="toggleAuthMode()">Sign Up</span>
+            </p>
+            <button class="btn" onclick="closeModal('auth-modal')" style="width: 100%; margin-top: 1rem; background: #f1f5f9;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Post Item Modal -->
+    <div id="post-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2>Report an Item</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Fill in the details to help others find or return the item.</p>
+            
+            <form id="post-form">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Item Name</label>
+                        <input type="text" id="post-name" placeholder="e.g. Blue Wallet" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Report Type</label>
+                        <select id="post-type">
+                            <option value="lost">I Lost It</option>
+                            <option value="found">I Found It</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="post-category" onchange="toggleCategoryFields()">
+                            <option value="personal">👜 Personal Items (Bag, Wallet, etc.)</option>
+                            <option value="electronics">💻 Electronics (Phone, Laptop)</option>
+                            <option value="document">📄 Documents (Aadhar, PAN, Passport)</option>
+                            <option value="vehicle">🚲 Vehicles (Bike, Car)</option>
+                            <option value="pet">🐾 Pets / Animals</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Dynamic Category Fields -->
+                <div id="electronics-fields" class="category-fields" style="display: none;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>IMEI (15 digits)</label>
+                            <input type="text" id="post-imei" placeholder="For mobiles">
+                        </div>
+                        <div class="form-group">
+                            <label>Serial Number</label>
+                            <input type="text" id="post-serial" placeholder="For laptops/tablets">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="document-fields" class="category-fields" style="display: none;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Document Type</label>
+                            <input type="text" id="post-doc-type" placeholder="e.g. Aadhar, PAN">
+                        </div>
+                        <div class="form-group">
+                            <label>Document Number</label>
+                            <input type="text" id="post-doc-num" placeholder="Unique ID on document">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="vehicle-fields" class="category-fields" style="display: none;">
+                    <div class="form-group">
+                        <label>Registration Number (Plate)</label>
+                        <input type="text" id="post-reg-num" placeholder="e.g. DL 1S AB 1234">
+                    </div>
+                </div>
+
+                <div id="pet-fields" class="category-fields" style="display: none;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Species</label>
+                            <input type="text" id="post-species" placeholder="e.g. Dog, Cat">
+                        </div>
+                        <div class="form-group">
+                            <label>Breed</label>
+                            <input type="text" id="post-breed" placeholder="e.g. Labrador">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="guest-email-group">
+                    <label>Your Email Address (for matching alerts)</label>
+                    <input type="email" id="post-email" placeholder="example@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="post-address" placeholder="e.g. Central Park, NY" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="post-desc" rows="3" placeholder="Describe the item in detail..." required></textarea>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; background: #f8fafc; padding: 0.8rem; border-radius: 8px;">
+                    <input type="checkbox" id="post-police" style="width: auto;">
+                    <label style="margin: 0; font-weight: 500;">Official Police/Authority Report</label>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">Post Report</button>
+            </form>
+            <button class="btn" onclick="closeModal('post-modal')" style="width: 100%; margin-top: 1rem; background: #f1f5f9;">Cancel</button>
         </div>
     </div>
 
